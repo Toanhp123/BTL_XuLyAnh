@@ -2,7 +2,6 @@ package com.example.btl_xulyanh;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -11,7 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,14 +27,6 @@ public class MainActivity extends AppCompatActivity {
             mat = ImageProcessor.uriToMat(this, uri);
         }
     });
-
-    static {
-        if (!OpenCVLoader.initLocal()) {
-            Log.e("OpenCV", "OpenCV initialization failed");
-        } else {
-            Log.e("OpenCV", "OpenCV initialization succeeded");
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
