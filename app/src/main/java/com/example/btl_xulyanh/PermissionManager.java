@@ -14,8 +14,8 @@ public class PermissionManager {
     private final Context context;
     public int status = 0;
 
-    public PermissionManager(Activity activity) {
-        this.context = activity;
+    public PermissionManager(Context context) {
+        this.context = context;
     }
 
     public void checkAndRequestPermission() {
