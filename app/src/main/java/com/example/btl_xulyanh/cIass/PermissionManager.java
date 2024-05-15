@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class PermissionManager {
     private static final int PERMISSION_REQUEST_CODE = 123;
     private final Context context;
-    private int numberRequest;
     public int status;
 
     public PermissionManager(Context context) {
@@ -29,9 +27,7 @@ public class PermissionManager {
 
     public void requestPermission() {
         // Yêu cầu quyền trực tiếp từ người dùng.
-        ActivityCompat.requestPermissions((Activity) context,
-                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
     public void showPermissionDeniedMessage() {
