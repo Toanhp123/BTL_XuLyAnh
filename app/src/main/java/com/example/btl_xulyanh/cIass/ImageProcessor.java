@@ -1,4 +1,4 @@
-package com.example.btl_xulyanh;
+package com.example.btl_xulyanh.cIass;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,9 +36,9 @@ public class ImageProcessor {
         return mat;
     }
 
-    public void filterNLM(Mat inputMat, @NonNull ImageView imageView) {
+    public void filterNLM(Mat inputMat, @NonNull ImageView imageView, int h, int hcolor, int templateWindowSie, int searchWindowSize) {
         Mat resultMat = new Mat();
-        Photo.fastNlMeansDenoisingColored(inputMat, resultMat, 20, 10, 7, 21);
+        Photo.fastNlMeansDenoisingColored(inputMat, resultMat, h, hcolor, templateWindowSie, searchWindowSize);
 
         // Chuyển đổi kết quả thành ảnh bitmap
         Bitmap resultBitmap = Bitmap.createBitmap(resultMat.cols(), resultMat.rows(), Bitmap.Config.ARGB_8888);
@@ -48,12 +48,12 @@ public class ImageProcessor {
         imageView.setImageBitmap(resultBitmap);
     }
 
-    public void filterBilateral(Mat input, @NonNull ImageView imageView) {
+    public void filterBilateral(Mat input, @NonNull ImageView imageView, int d, int sigmaColor, int sigmaSpace) {
         //chuyển RGBA sang RGB
         Imgproc.cvtColor(input, input, Imgproc.COLOR_BGRA2BGR);
 
         Mat resultMat = new Mat();
-        Imgproc.bilateralFilter(input, resultMat, 10, 250, 50);
+        Imgproc.bilateralFilter(input, resultMat, d, sigmaColor, sigmaSpace);
 
         //chuyển RGB sang RGBA
         Imgproc.cvtColor(resultMat, resultMat, Imgproc.COLOR_RGB2RGBA);
