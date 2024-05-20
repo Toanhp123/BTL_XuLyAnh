@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +12,9 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageProcessor {
@@ -36,7 +38,21 @@ public class ImageProcessor {
         return mat;
     }
 
-    public void filterNLM(Mat inputMat, @NonNull ImageView imageView, int h, int hcolor, int templateWindowSie, int searchWindowSize) {
+    public static Uri bitmapToUri(@NonNull Context inContext, @NonNull Bitmap inImage) {
+        File cacheDir = inContext.getCacheDir();  // Lấy thư mục cache của ứng dụng
+        File tempFile = new File(cacheDir, "temp_image_" + System.currentTimeMillis() + ".jpg");  // Tạo tệp tạm thời với tên duy nhất
+
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            inImage.compress(Bitmap.CompressFormat.JPEG, 100, out);  // Lưu ảnh dưới dạng JPEG với chất lượng cao nhất
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Uri.fromFile(tempFile);  // Trả về URI của tệp tạm thời
+    }
+
+    public Bitmap filterNLM(Mat inputMat, int h, int hcolor, int templateWindowSie, int searchWindowSize) {
         Mat resultMat = new Mat();
         Photo.fastNlMeansDenoisingColored(inputMat, resultMat, h, hcolor, templateWindowSie, searchWindowSize);
 
@@ -44,11 +60,10 @@ public class ImageProcessor {
         Bitmap resultBitmap = Bitmap.createBitmap(resultMat.cols(), resultMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(resultMat, resultBitmap);
 
-        // Hiển thị kết quả trên ImageView
-        imageView.setImageBitmap(resultBitmap);
+        return resultBitmap;
     }
 
-    public void filterBilateral(Mat input, @NonNull ImageView imageView, int d, int sigmaColor, int sigmaSpace) {
+    public Bitmap filterBilateral(Mat input, int d, int sigmaColor, int sigmaSpace) {
         //chuyển RGBA sang RGB
         Imgproc.cvtColor(input, input, Imgproc.COLOR_BGRA2BGR);
 
@@ -61,7 +76,6 @@ public class ImageProcessor {
         Bitmap resultBitmap = Bitmap.createBitmap(resultMat.cols(), resultMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(resultMat, resultBitmap);
 
-        // Hiển thị kết quả trên ImageView
-        imageView.setImageBitmap(resultBitmap);
+        return resultBitmap;
     }
 }

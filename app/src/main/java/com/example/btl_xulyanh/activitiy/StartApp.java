@@ -34,6 +34,8 @@ public class StartApp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_app);
 
+        setSupportActionBar(findViewById(R.id.toolBarStart));
+
         permissionManager = new PermissionManager(this);
 
         btnStart = findViewById(R.id.btnStart);

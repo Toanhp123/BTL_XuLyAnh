@@ -1,15 +1,15 @@
 package com.example.btl_xulyanh.fragment;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -20,21 +20,37 @@ import org.opencv.core.Mat;
 
 public class NonLocalMean extends Fragment {
 
-    Button btnNLM, btnGetIMG;
-    ImageView imgNLM;
-    EditText edtH, edtHcolor, edtTextTemplate, edtSearch;
-    Mat mat;
-    ImageProcessor imageProcessor;
+    private Mat mat;
+    private static Uri src_image;
+    private ImageProcessor imageProcessor;
+    private OnImageProcessedListener mListener;
 
     public NonLocalMean() {
     }
 
-    private final ActivityResultLauncher<String> getImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        if (uri != null) {
-            imgNLM.setImageURI(uri);
-            mat = ImageProcessor.uriToMat(getContext(), uri);
+    public void setUri(Uri uri) {
+        src_image = uri;
+    }
+
+    public interface OnImageProcessedListener {
+        void onImageProcessed(Bitmap processedImage);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnImageProcessedListener) {
+            mListener = (OnImageProcessedListener) context;
+        } else {
+            throw new RuntimeException(context + " must implement OnImageProcessedListener");
         }
-    });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,28 +58,27 @@ public class NonLocalMean extends Fragment {
 
         imageProcessor = new ImageProcessor();
 
-        imgNLM = view.findViewById(R.id.imgNLM);
-
-        edtH = view.findViewById(R.id.edtH);
-        edtHcolor = view.findViewById(R.id.edtHcolor);
-        edtTextTemplate = view.findViewById(R.id.edtTextTemplate);
-        edtSearch = view.findViewById(R.id.edtSearch);
+        EditText edtH = view.findViewById(R.id.edtH);
+        EditText edtHcolor = view.findViewById(R.id.edtHcolor);
+        EditText edtTextTemplate = view.findViewById(R.id.edtTextTemplate);
+        EditText edtSearch = view.findViewById(R.id.edtSearch);
 
         int h = edtH.getText().toString().isEmpty() ? 10 : Integer.parseInt(edtH.getText().toString());
-        int hcolor = edtH.getText().toString().isEmpty() ? 10 : Integer.parseInt(edtH.getText().toString());
-        int template = edtH.getText().toString().isEmpty() ? 7 : Integer.parseInt(edtH.getText().toString());
-        int search = edtH.getText().toString().isEmpty() ? 21 : Integer.parseInt(edtH.getText().toString());
+        int hcolor = edtH.getText().toString().isEmpty() ? 10 : Integer.parseInt(edtHcolor.getText().toString());
+        int template = edtH.getText().toString().isEmpty() ? 7 : Integer.parseInt(edtTextTemplate.getText().toString());
+        int search = edtH.getText().toString().isEmpty() ? 21 : Integer.parseInt(edtSearch.getText().toString());
 
-        btnNLM = view.findViewById(R.id.btnNLM);
+        Button btnNLM = view.findViewById(R.id.btnNLM);
         btnNLM.setOnClickListener(v -> {
-            if (mat != null) {
-                imageProcessor.filterNLM(mat, imgNLM, h, hcolor, template, search);
+            if (mListener != null && src_image != null) {
+                mat = ImageProcessor.uriToMat(getContext(), src_image);
+                Bitmap resultImage = imageProcessor.filterNLM(mat, h, hcolor, template, search);
+                mListener.onImageProcessed(resultImage);
             }
         });
 
-        btnGetIMG = view.findViewById(R.id.btnGetImgNLM);
-        btnGetIMG.setOnClickListener(v -> getImageLauncher.launch("image/*"));
-
         return view;
     }
+
+
 }

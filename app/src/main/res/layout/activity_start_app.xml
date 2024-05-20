@@ -7,11 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".activitiy.StartApp">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBarStart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="268dp"
         android:text="Photo App"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,9 +28,9 @@
 
     <Button
         android:id="@+id/btnStart"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="24dp"
         android:text="Start"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,13 +39,13 @@
 
     <Button
         android:id="@+id/btnExit"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
         android:text="Exit"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnStart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

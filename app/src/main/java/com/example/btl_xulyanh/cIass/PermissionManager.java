@@ -1,5 +1,6 @@
 package com.example.btl_xulyanh.cIass;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -18,7 +19,8 @@ public class PermissionManager {
     }
 
     public void checkAndRequestPermission() {
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             status = 1;
         } else {
             requestPermission();
@@ -27,7 +29,10 @@ public class PermissionManager {
 
     public void requestPermission() {
         // Yêu cầu quyền trực tiếp từ người dùng.
-        ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions((Activity) context,
+                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST_CODE);
     }
 
     public void showPermissionDeniedMessage() {

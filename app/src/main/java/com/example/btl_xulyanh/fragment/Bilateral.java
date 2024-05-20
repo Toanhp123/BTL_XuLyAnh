@@ -1,15 +1,15 @@
 package com.example.btl_xulyanh.fragment;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -20,22 +20,38 @@ import org.opencv.core.Mat;
 
 public class Bilateral extends Fragment {
 
-    Button btnGetImgBilateral, btnBilateral;
-    ImageView imgBilateral;
-    EditText edtSigmaColor, edtSigmaSpace, edtD;
-    Mat mat;
-    ImageProcessor imageProcessor;
+    private Mat mat;
+    private Bilateral.OnImageProcessedListener mListener;
+    private ImageProcessor imageProcessor;
+    private static Uri src_image;
 
     public Bilateral() {
         // Required empty public constructor
     }
 
-    private final ActivityResultLauncher<String> getImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        if (uri != null) {
-            imgBilateral.setImageURI(uri);
-            mat = ImageProcessor.uriToMat(getContext(), uri);
+    public void setUri(Uri uri) {
+        src_image = uri;
+    }
+
+    public interface OnImageProcessedListener {
+        void onImageProcessed(Bitmap processedImage);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Bilateral.OnImageProcessedListener) {
+            mListener = (Bilateral.OnImageProcessedListener) context;
+        } else {
+            throw new RuntimeException(context + " must implement OnImageProcessedListener");
         }
-    });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,25 +60,22 @@ public class Bilateral extends Fragment {
 
         imageProcessor = new ImageProcessor();
 
-        imgBilateral = view.findViewById(R.id.imgBilateral);
-
-        edtSigmaColor = view.findViewById(R.id.edtSigmaColor);
-        edtSigmaSpace = view.findViewById(R.id.edtSigmaSpace);
-        edtD = view.findViewById(R.id.edtD);
+        EditText edtSigmaColor = view.findViewById(R.id.edtSigmaColor);
+        EditText edtSigmaSpace = view.findViewById(R.id.edtSigmaSpace);
+        EditText edtD = view.findViewById(R.id.edtD);
 
         int sigmaColor = edtSigmaColor.getText().toString().isEmpty() ? 250 : Integer.parseInt(edtSigmaColor.getText().toString());
         int sigmaSpace = edtSigmaSpace.getText().toString().isEmpty() ? 50 : Integer.parseInt(edtSigmaSpace.getText().toString());
         int d = edtD.getText().toString().isEmpty() ? 10 : Integer.parseInt(edtD.getText().toString());
 
-        btnBilateral = view.findViewById(R.id.btnBilateral);
+        Button btnBilateral = view.findViewById(R.id.btnBilateral);
         btnBilateral.setOnClickListener(v -> {
-            if (mat != null) {
-                imageProcessor.filterBilateral(mat, imgBilateral, d, sigmaColor, sigmaSpace);
+            if (mListener != null && src_image != null) {
+                mat = ImageProcessor.uriToMat(getContext(), src_image);
+                Bitmap resultImage = imageProcessor.filterBilateral(mat, d, sigmaColor, sigmaSpace);
+                mListener.onImageProcessed(resultImage);
             }
         });
-
-        btnGetImgBilateral = view.findViewById(R.id.btnGetImgBilateral);
-        btnGetImgBilateral.setOnClickListener(v -> getImageLauncher.launch("image/*"));
 
         return view;
     }
