@@ -81,8 +81,10 @@
             android:id="@+id/btnBilateral"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Bilateral"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtSigmaSpace" />
     </androidx.constraintlayout.widget.ConstraintLayout>
