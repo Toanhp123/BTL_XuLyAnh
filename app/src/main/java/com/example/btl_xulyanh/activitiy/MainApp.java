@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.btl_xulyanh.R;
 import com.example.btl_xulyanh.cIass.ImageProcessor;
 import com.example.btl_xulyanh.cIass.ScreenSlidePagerAdapter;
+import com.example.btl_xulyanh.cIass.TimeTransfer;
 import com.example.btl_xulyanh.fragment.Bilateral;
 import com.example.btl_xulyanh.fragment.NonLocalMean;
 import com.google.android.material.tabs.TabLayout;
@@ -73,8 +74,14 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
         } else if (item.getItemId() == R.id.itemAdd) {
             getImageLauncher.launch("image/*");
         } else if (item.getItemId() == R.id.itemSave) {
-            ImageProcessor.saveImage(this, save_image, "saved image");
-            Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
+            if (save_image != null) {
+                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
+                        TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
+                ImageProcessor.saveImage(this, save_image, "saved image at " + time);
+                Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Hãy chọn ảnh", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -88,9 +95,9 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     });
 
     @Override
-    public void onImageProcessed(Bitmap processedImage) {
+    public void onImageProcessed(Bitmap processedImage, String title) {
         imageView.setImageBitmap(processedImage);
-        Toast.makeText(this, "Xử lý ảnh thành công", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
         save_image = processedImage;
         src_image = ImageProcessor.bitmapToUri(this, processedImage);
         nonLocalMean.setUri(src_image);

@@ -33,7 +33,7 @@ public class NonLocalMean extends Fragment {
     }
 
     public interface OnImageProcessedListener {
-        void onImageProcessed(Bitmap processedImage);
+        void onImageProcessed(Bitmap processedImage, String title);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class NonLocalMean extends Fragment {
             if (mListener != null && src_image != null) {
                 mat = ImageProcessor.uriToMat(getContext(), src_image);
                 Bitmap resultImage = imageProcessor.filterNLM(mat, h, hcolor, template, search);
-                mListener.onImageProcessed(resultImage);
+                mListener.onImageProcessed(resultImage, "Áp dụng Non-local Means thành công");
             }
         });
 

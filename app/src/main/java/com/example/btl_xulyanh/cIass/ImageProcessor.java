@@ -83,7 +83,6 @@ public class ImageProcessor {
         } catch (IOException e) {
             if (imageUri != null) {
                 context.getContentResolver().delete(imageUri, null, null);
-                imageUri = null;
             }
             e.printStackTrace();
         }

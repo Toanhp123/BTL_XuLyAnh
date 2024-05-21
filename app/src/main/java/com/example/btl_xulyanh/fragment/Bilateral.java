@@ -34,7 +34,7 @@ public class Bilateral extends Fragment {
     }
 
     public interface OnImageProcessedListener {
-        void onImageProcessed(Bitmap processedImage);
+        void onImageProcessed(Bitmap processedImage, String title);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Bilateral extends Fragment {
             if (mListener != null && src_image != null) {
                 mat = ImageProcessor.uriToMat(getContext(), src_image);
                 Bitmap resultImage = imageProcessor.filterBilateral(mat, d, sigmaColor, sigmaSpace);
-                mListener.onImageProcessed(resultImage);
+                mListener.onImageProcessed(resultImage, "Áp dụng Bilateral thành công");
             }
         });
 
