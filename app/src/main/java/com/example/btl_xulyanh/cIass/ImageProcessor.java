@@ -1,9 +1,12 @@
 package com.example.btl_xulyanh.cIass;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ImageProcessor {
     @NonNull
@@ -36,6 +40,53 @@ public class ImageProcessor {
             e.printStackTrace();
         }
         return mat;
+    }
+
+    public static void saveImage(@NonNull Context context, @NonNull Bitmap bitmap, @NonNull String title) {
+        Uri imageUri = null;
+        OutputStream fos;
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, title);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures");
+            values.put(MediaStore.Images.Media.IS_PENDING, true);
+
+            Uri collection;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            } else {
+                collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            }
+
+            imageUri = context.getContentResolver().insert(collection, values);
+            if (imageUri == null) {
+                throw new IOException("Failed to create new MediaStore record.");
+            }
+
+            fos = context.getContentResolver().openOutputStream(imageUri);
+            if (fos == null) {
+                throw new IOException("Failed to get output stream.");
+            }
+
+            if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)) {
+                throw new IOException("Failed to save bitmap.");
+            }
+
+            fos.close();
+
+            values.clear();
+            values.put(MediaStore.Images.Media.IS_PENDING, false);
+            context.getContentResolver().update(imageUri, values, null, null);
+
+        } catch (IOException e) {
+            if (imageUri != null) {
+                context.getContentResolver().delete(imageUri, null, null);
+                imageUri = null;
+            }
+            e.printStackTrace();
+        }
     }
 
     public static Uri bitmapToUri(@NonNull Context inContext, @NonNull Bitmap inImage) {

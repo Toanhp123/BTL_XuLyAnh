@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,6 +32,7 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     private NonLocalMean nonLocalMean;
     private Bilateral bilateral;
     private Uri src_image;
+    private Bitmap save_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,8 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
         } else if (item.getItemId() == R.id.itemAdd) {
             getImageLauncher.launch("image/*");
         } else if (item.getItemId() == R.id.itemSave) {
-
+            ImageProcessor.saveImage(this, save_image, "saved image");
+            Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -87,6 +90,8 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     @Override
     public void onImageProcessed(Bitmap processedImage) {
         imageView.setImageBitmap(processedImage);
+        Toast.makeText(this, "Xử lý ảnh thành công", Toast.LENGTH_SHORT).show();
+        save_image = processedImage;
         src_image = ImageProcessor.bitmapToUri(this, processedImage);
         nonLocalMean.setUri(src_image);
         bilateral.setUri(src_image);
