@@ -68,8 +68,10 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.itemHome) {
             finish();
-        } else if (item.getItemId() == R.id.itemButton) {
+        } else if (item.getItemId() == R.id.itemAdd) {
             getImageLauncher.launch("image/*");
+        } else if (item.getItemId() == R.id.itemSave) {
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -100,8 +102,7 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
                 boolean deleted = file.delete();
                 if (!deleted) {
                     Log.e("TAG", "không xóa được file");
-                }
-                else{
+                } else {
                     Log.e("TAG", "xóa được file");
                 }
             }
