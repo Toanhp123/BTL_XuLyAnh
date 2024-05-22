@@ -106,7 +106,7 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     @Override
     public void onImageProcessed(Bitmap processedImage, String title, double time) {
         imageView.setImageBitmap(processedImage);
-        Log.e("Time", String.valueOf(time / 1000000000) + "s");
+        Log.e("Time", time / 1000000000 + "s");
         Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
         save_image = processedImage;
         nonLocalMean.setBitmap(processedImage);
