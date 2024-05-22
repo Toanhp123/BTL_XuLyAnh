@@ -32,8 +32,8 @@ public class StartApp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_app);
 
+        setContentView(R.layout.activity_start_app);
         setSupportActionBar(findViewById(R.id.toolBarStart));
 
         permissionManager = new PermissionManager(this);

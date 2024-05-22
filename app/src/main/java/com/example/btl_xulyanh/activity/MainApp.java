@@ -40,8 +40,8 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_app);
 
+        setContentView(R.layout.activity_main_app);
         setSupportActionBar(findViewById(R.id.toolBarMain));
 
         imageView = findViewById(R.id.imageView);
