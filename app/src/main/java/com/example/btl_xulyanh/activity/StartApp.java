@@ -1,4 +1,4 @@
-package com.example.btl_xulyanh.activitiy;
+package com.example.btl_xulyanh.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;

@@ -1,4 +1,4 @@
-package com.example.btl_xulyanh.activitiy;
+package com.example.btl_xulyanh.activity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
