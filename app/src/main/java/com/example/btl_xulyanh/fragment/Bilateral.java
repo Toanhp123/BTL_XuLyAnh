@@ -34,7 +34,7 @@ public class Bilateral extends Fragment {
     }
 
     public interface OnImageProcessedListener {
-        void onImageProcessed(Bitmap processedImage, String title);
+        void onImageProcessed(Bitmap processedImage, String title, double time);
     }
 
     @Override
@@ -72,8 +72,11 @@ public class Bilateral extends Fragment {
         btnBilateral.setOnClickListener(v -> {
             if (mListener != null && src_image != null) {
                 mat = ImageProcessor.bitmatToMat(src_image);
+                double startTime = System.nanoTime();
                 Bitmap resultImage = imageProcessor.filterBilateral(mat, d, sigmaColor, sigmaSpace);
-                mListener.onImageProcessed(resultImage, "Áp dụng Bilateral thành công");
+                double endTime = System.nanoTime();
+                double MethodeDuration = (endTime - startTime);
+                mListener.onImageProcessed(resultImage, "Áp dụng Bilateral thành công", MethodeDuration);
             }
             else{
                 Toast.makeText(requireContext(), "Hãy chọn 1 ảnh để xử lý", Toast.LENGTH_SHORT).show();
