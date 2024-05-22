@@ -3,7 +3,6 @@ package com.example.btl_xulyanh.activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public class MainApp extends AppCompatActivity implements NonLocalMean.OnImageProcessedListener, Bilateral.OnImageProcessedListener {
@@ -79,19 +77,15 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
             getImageLauncher.launch("image/*");
         } else if (item.getItemId() == R.id.itemSave) {
             if (src_image != null && save_image != null) {
-                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ? TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
+                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
+                        TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
                 ImageProcessor.saveImage(this, save_image, "saved image at " + time);
                 Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
             } else if (src_image != null) {
-                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ? TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), src_image);
-                    ImageProcessor.saveImage(this, bitmap, "saved image at " + time);
-                    Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
+                        TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
+                ImageProcessor.saveImage(this, ImageProcessor.uriToBitmap(this, src_image), "saved image at " + time);
+                Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Hãy chọn ảnh", Toast.LENGTH_SHORT).show();
             }
@@ -103,8 +97,9 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
         if (uri != null) {
             imageView.setImageURI(uri);
             src_image = uri;
-            nonLocalMean.setUri(uri);
-            bilateral.setUri(uri);
+            Bitmap bitmap_src_map = ImageProcessor.uriToBitmap(this, uri);
+            nonLocalMean.setBitmap(bitmap_src_map);
+            bilateral.setBitmap(bitmap_src_map);
         }
     });
 
@@ -113,9 +108,8 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
         imageView.setImageBitmap(processedImage);
         Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
         save_image = processedImage;
-        src_image = ImageProcessor.bitmapToUri(this, processedImage);
-        nonLocalMean.setUri(src_image);
-        bilateral.setUri(src_image);
+        nonLocalMean.setBitmap(processedImage);
+        bilateral.setBitmap(processedImage);
     }
 
     @Override

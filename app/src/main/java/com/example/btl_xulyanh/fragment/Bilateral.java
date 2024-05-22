@@ -2,7 +2,6 @@ package com.example.btl_xulyanh.fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,14 +22,14 @@ public class Bilateral extends Fragment {
     private Mat mat;
     private Bilateral.OnImageProcessedListener mListener;
     private ImageProcessor imageProcessor;
-    private static Uri src_image;
+    private static Bitmap src_image;
 
     public Bilateral() {
         // Required empty public constructor
     }
 
-    public void setUri(Uri uri) {
-        src_image = uri;
+    public void setBitmap(Bitmap bitmap) {
+        src_image = bitmap;
     }
 
     public interface OnImageProcessedListener {
@@ -71,7 +70,7 @@ public class Bilateral extends Fragment {
         Button btnBilateral = view.findViewById(R.id.btnBilateral);
         btnBilateral.setOnClickListener(v -> {
             if (mListener != null && src_image != null) {
-                mat = ImageProcessor.uriToMat(getContext(), src_image);
+                mat = ImageProcessor.bitmatToMat(src_image);
                 Bitmap resultImage = imageProcessor.filterBilateral(mat, d, sigmaColor, sigmaSpace);
                 mListener.onImageProcessed(resultImage, "Áp dụng Bilateral thành công");
             }

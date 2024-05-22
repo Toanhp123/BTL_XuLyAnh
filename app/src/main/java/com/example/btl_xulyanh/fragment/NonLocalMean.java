@@ -2,7 +2,6 @@ package com.example.btl_xulyanh.fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,15 +20,15 @@ import org.opencv.core.Mat;
 public class NonLocalMean extends Fragment {
 
     private Mat mat;
-    private static Uri src_image;
+    private static Bitmap src_image;
     private ImageProcessor imageProcessor;
     private OnImageProcessedListener mListener;
 
     public NonLocalMean() {
     }
 
-    public void setUri(Uri uri) {
-        src_image = uri;
+    public void setBitmap(Bitmap bitmap) {
+        src_image = bitmap;
     }
 
     public interface OnImageProcessedListener {
@@ -71,7 +70,7 @@ public class NonLocalMean extends Fragment {
         Button btnNLM = view.findViewById(R.id.btnNLM);
         btnNLM.setOnClickListener(v -> {
             if (mListener != null && src_image != null) {
-                mat = ImageProcessor.uriToMat(getContext(), src_image);
+                mat = ImageProcessor.bitmatToMat(src_image);
                 Bitmap resultImage = imageProcessor.filterNLM(mat, h, hcolor, template, search);
                 mListener.onImageProcessed(resultImage, "Áp dụng Non-local Means thành công");
             }
