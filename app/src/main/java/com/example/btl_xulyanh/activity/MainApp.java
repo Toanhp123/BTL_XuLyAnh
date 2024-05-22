@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
 
         setContentView(R.layout.activity_main_app);
         setSupportActionBar(findViewById(R.id.toolBarMain));
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         imageView = findViewById(R.id.imageView);
         nonLocalMean = new NonLocalMean();
@@ -77,13 +79,11 @@ public class MainApp extends AppCompatActivity implements NonLocalMean.OnImagePr
             getImageLauncher.launch("image/*");
         } else if (item.getItemId() == R.id.itemSave) {
             if (src_image != null && save_image != null) {
-                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
-                        TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
+                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ? TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
                 ImageProcessor.saveImage(this, save_image, "saved image at " + time);
                 Toast.makeText(this, "Lưu ảnh thành công", Toast.LENGTH_SHORT).show();
             } else if (src_image != null) {
-                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
-                        TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
+                String time = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ? TimeTransfer.getTime(System.currentTimeMillis()) : String.valueOf(System.currentTimeMillis());
                 Bitmap bitmap;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), src_image);
