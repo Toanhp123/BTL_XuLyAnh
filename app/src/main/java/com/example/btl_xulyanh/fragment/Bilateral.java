@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -73,6 +74,9 @@ public class Bilateral extends Fragment {
                 mat = ImageProcessor.bitmatToMat(src_image);
                 Bitmap resultImage = imageProcessor.filterBilateral(mat, d, sigmaColor, sigmaSpace);
                 mListener.onImageProcessed(resultImage, "Áp dụng Bilateral thành công");
+            }
+            else{
+                Toast.makeText(requireContext(), "Hãy chọn 1 ảnh để xử lý", Toast.LENGTH_SHORT).show();
             }
         });
 
